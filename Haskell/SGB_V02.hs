@@ -20,6 +20,8 @@ data Bibliotecario = Bibliotecario {
 
 data Visitante = Visitante{nomeV :: String, cpfV :: String} deriving (Show)
 
+data Cabine = Cabine{idCabine :: Int, ocupado :: Bool} deriving (Show)
+
 
 
 -- //////////////////////////////////////  Conjuntos Iniciais //////////////////////////////////////
