@@ -20,7 +20,7 @@ data Bibliotecario = Bibliotecario {
 
 data Visitante = Visitante{nomeV :: String, cpfV :: String} deriving (Show)
 
-data Cabine = Cabine{id::Int, ocupada::Bool} deriving (Show)
+
 
 -- //////////////////////////////////////  Conjuntos Iniciais //////////////////////////////////////
 bibliotecarioCadastrado :: [Bibliotecario]  
@@ -34,19 +34,6 @@ livrosCadastrados = [Livro {indice = 1, nome = "Fahrenheit 451", genero = "disto
 					 Livro {indice = 5, nome = "A peste", genero = "filosofia", ano = "1947", autor = "Albert Camus"},
 					 Livro {indice = 6, nome = "Cem anos de solidão", genero = "realismo mágico", ano = "2001", autor = "Gabriel García Márquez"},
 					 Livro {indice = 7, nome = "O Gene Egoísta", genero = "Biologia", ano = "1976", autor = "Richard Dawkins"}]
-					 
-cabinesCadastradas :: [Cabine]
-cabinesCadastradas = [Cabine {id = 1, ocupada = "False"},
-					  Cabine {id = 2, ocupada = "False"},
-					  Cabine {id = 3, ocupada = "False"},
-					  Cabine {id = 4, ocupada = "False"},
-					  Cabine {id = 5, ocupada = "False"},
-					  Cabine {id = 6, ocupada = "False"},
-					  Cabine {id = 7, ocupada = "False"},
-					  Cabine {id = 8, ocupada = "False"},
-					  Cabine {id = 9, ocupada = "False"},
-					  Cabine {id = 10, ocupada = "False"}]
-
 -- //////////////////////////////////////  MENU  //////////////////////////////////////
 
 main :: IO ()
@@ -107,7 +94,6 @@ menuOpcaoVisitante = do
     putStrLn "5 - Enviar sugestão de livro."
     putStrLn "6 - Fazer doação."
     putStrLn "7 - Fazer devolução com avaliação."
-    putStrLn "8 - Utilizar cabine."
     putStrLn "\nOpcao: "
     opcao <- getLine
     if (read opcao) == 0 then putStrLn("Fim do Programa") else do opcaoEscolhidaVisitante (read opcao)
@@ -163,7 +149,6 @@ opcaoEscolhidaVisitante opcao
                     | opcao == 4 = do {imprimeListarLivrosPorGenero; menuOpcaoVisitante}    
                     | opcao == 5 = do {enviarSugestao; menuOpcaoVisitante}  
                     | opcao == 6 = do {fazerDoacao; menuOpcaoVisitante}
-		    | opcao == 8 = do {}
                     | opcao == 7 = do {realizarDevolucao;menuOpcaoVisitante} 
                     | opcao == 0 = do {putStrLn "Fim do Programa.\n"}  
                     | otherwise =  do {putStrLn "Opcao invalida, Porfavor escolha uma opcao valida" ; menuOpcaoVisitante}
@@ -220,7 +205,7 @@ visualizarDoacoes :: IO()
 visualizarDoacoes = do
     printEspaco
     putStrLn "==> Livros doados:\n"
-    doacoes <- readFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/doacoes.txt"
+    doacoes <- readFile "doacoes.txt"
     putStrLn doacoes
     printEspaco
 -- //////////////////////////////////////  OPERAÇÕES  //////////////////////////////////////
@@ -340,11 +325,6 @@ cadastrarLivro = do
     let x = geraLivro input
     cadastraLivro x
 
-ocuparCabine :: IO()
-ocuparCabine = do
-    putStr "Digite o numero da cabine que deseja utilizar: "
-    input <- getLine
-    
 -- //////////////////////////////////////  AUXILIARES  //////////////////////////////////////
 -- //Auxiliares de Livro:--------------------------------------------------------------------
 toStringLivro :: Livro -> String
@@ -468,12 +448,12 @@ formataLivro (Livro a b c d e) = (show a) ++ "-" ++ b ++ "-" ++ c ++ "-" ++ d ++
 cadastraLivro :: Livro -> IO()
 cadastraLivro livro  = do
     let x  = formataLivro livro
-    appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/livroscadastrados.txt" (x)
+    appendFile "livroscadastrados.txt" (x)
 
 cadastraDoacao :: String -> Livro -> IO()
 cadastraDoacao nome livro  = do
     let x  = formataLivro livro
-    appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/doacoes.txt" $ nome++"-"++ x
+    appendFile "doacoes.txt" $ nome++"-"++ x
 
 quantidadeAtualLivros :: [Livro] -> Int
 quantidadeAtualLivros [] = 0
@@ -501,7 +481,7 @@ cadastraVisitante visitante  = do
     let flag = checaVisitante visitantes (visitanteCpf visitante)
     if flag /= "" then putStrLn $ "Visitante já existe"
     else do
-        appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/visitantes.txt" (formataVisitante visitante)
+        appendFile "visitantes.txt" (formataVisitante visitante)
 
 
 verificaVisitante :: IO() -- FAz a compração dos CPFs para autorizar o login do visistante;
@@ -560,7 +540,7 @@ checaVisitanteCPF visitantes cpf = do
         encontrado = procuraCPF (splitOn "\n" visitantes) cpf
 -- //Auxiliares Outros:--------------------------------------------------------------------
 lerArquivo ::IO String
-lerArquivo = readFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/visitantes.txt"
+lerArquivo = readFile "visitantes.txt"
 
 printEspaco :: IO()
 printEspaco = putStrLn "\n\n\n"
