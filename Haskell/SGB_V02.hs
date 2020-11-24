@@ -20,6 +20,8 @@ data Bibliotecario = Bibliotecario {
 
 data Visitante = Visitante{nomeV :: String, cpfV :: String} deriving (Show)
 
+data Cabine = Cabine{idCabine :: Int, ocupado :: Bool} deriving (Show)
+
 
 
 -- //////////////////////////////////////  Conjuntos Iniciais //////////////////////////////////////
@@ -205,7 +207,7 @@ visualizarDoacoes :: IO()
 visualizarDoacoes = do
     printEspaco
     putStrLn "==> Livros doados:\n"
-    doacoes <- readFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/doacoes.txt"
+    doacoes <- readFile "doacoes.txt"
     putStrLn doacoes
     printEspaco
 -- //////////////////////////////////////  OPERAÇÕES  //////////////////////////////////////
@@ -448,12 +450,12 @@ formataLivro (Livro a b c d e) = (show a) ++ "-" ++ b ++ "-" ++ c ++ "-" ++ d ++
 cadastraLivro :: Livro -> IO()
 cadastraLivro livro  = do
     let x  = formataLivro livro
-    appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/livroscadastrados.txt" (x)
+    appendFile "livroscadastrados.txt" (x)
 
 cadastraDoacao :: String -> Livro -> IO()
 cadastraDoacao nome livro  = do
     let x  = formataLivro livro
-    appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/doacoes.txt" $ nome++"-"++ x
+    appendFile "doacoes.txt" $ nome++"-"++ x
 
 quantidadeAtualLivros :: [Livro] -> Int
 quantidadeAtualLivros [] = 0
@@ -481,7 +483,7 @@ cadastraVisitante visitante  = do
     let flag = checaVisitante visitantes (visitanteCpf visitante)
     if flag /= "" then putStrLn $ "Visitante já existe"
     else do
-        appendFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/visitantes.txt" (formataVisitante visitante)
+        appendFile "visitantes.txt" (formataVisitante visitante)
 
 
 verificaVisitante :: IO() -- FAz a compração dos CPFs para autorizar o login do visistante;
@@ -540,7 +542,7 @@ checaVisitanteCPF visitantes cpf = do
         encontrado = procuraCPF (splitOn "\n" visitantes) cpf
 -- //Auxiliares Outros:--------------------------------------------------------------------
 lerArquivo ::IO String
-lerArquivo = readFile "/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB/visitantes.txt"
+lerArquivo = readFile "visitantes.txt"
 
 printEspaco :: IO()
 printEspaco = putStrLn "\n\n\n"
@@ -550,3 +552,16 @@ divide x y = (a/b)*100
     where   
         a = fromIntegral x :: Float
         b = fromIntegral y :: Float
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+
