@@ -51,7 +51,7 @@ menuOpcoesBibliotecario() :-
 	writeln("\nOpcao: "),
 	writeln("\n"),
 	read(A),
-	opcaoB(A),
+	opcaoA(A),
 	menuOpcoesBibliotecario().
 /*-----------------------------------------------------------------------Menu Visitante e Opções----------------------------------------------------------*/
 opcaoB(0) :- halt.	
@@ -76,8 +76,8 @@ menuOpcoesVisitante() :-
 	writeln("7 - Fazer resenha de livro;"),
 	writeln("\nOpcao: "),
 	writeln("\n"),
-	read(A),
-	opcaoB(A),
+	read(B),
+	opcaoB(B),
 	menuOpcoesVisitante().
 /*-------------------------------------------------------------------------------------Main-------------------------------------------------------------------*/
 main :-
@@ -91,6 +91,7 @@ cadastrarVisitante() :-
     formataVisitante(S,C),
     writeln(File,S),
     close(File).
+
 
 verificarVisitante() :-
 	writeln("Digite seu CPF: "),
@@ -122,6 +123,7 @@ verificarBibliotecario() :-
 	call(bibliotecario(C,Nome)),
 	writeln("Usuário cadastrado."),writeln("Bem-vindo ao SGB"),nl,menuOpcoesBibliotecario;writeln("Usuário não cadastrado."),nl,menuPrevio.
 /*--------------------------------------------------------------------Funções Livros-------------------------------------------------------------------------*/
+
 cadastrarLivro() :- halt.
 
 buscarLivro() :- halt.
@@ -130,7 +132,13 @@ listarLivros() :- halt.
 
 listarLivrosAlugados() :- halt.
 
-listarSugestaoLivros() :- halt.
+listarSugestaoLivros() :- lerSugestoes(Visitante).
+
+lerSugestoes(Result) :-
+    open('Dados/sugestoes.txt',read,Str),
+    read_stream_to_codes(Str,Sugestoes),
+    atom_string(Sugestoes,Sugestoes1),
+    split_string(Sugestoes1,"\n","",Result), writeln(Result).
 
 listarLivrosDoados() :- halt.
 
