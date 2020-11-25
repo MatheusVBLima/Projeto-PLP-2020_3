@@ -8,7 +8,7 @@ bibliotecario("12345","Maria Madalena").
 opcaoP(0) :- halt.
 opcaoP(1) :- verificarBibliotecario().
 opcaoP(2) :- verificarVisitante(),writeln("Visitante encontrado!"),menuOpcoesVisitante(); writeln("Não cadastrado").
-opcaoP(3) :- cadastrarVisitante().
+opcaoP(3) :- cadastrarVisitante(),menuPrevio().
 opcaoP(X) :- writeln("Opção inválida. Tente novamente."),menuPrevio().
 
 menuPrevio() :-
@@ -20,19 +20,19 @@ menuPrevio() :-
 	read(A),
 	opcaoP(A).
 /*-----------------------------------------------------------------------Menu Bibliotecário e Opções----------------------------------------------------------*/
-opcaoB(0) :- halt.	
-opcaoB(1) :- buscarLivro().
-opcaoB(2) :- listarLivros().				
-opcaoB(3) :- listarLivrosDisponiveis().	
-opcaoB(4) :- listarLivrosAlugados().	
-opcaoB(5) :- efetuarAluguel().
-opcaoB(6) :- efetuarDevolucao().
-opcaoB(7) :- listarSugestaoLivros().
-opcaoB(8) :- visualizarCapacidade().
-opcaoB(9) :- visualizarPorcentagemAlugados().
-opcaoB(10) :- listarLivrosDoados().
-opcaoB(11) :- cadastrarLivro().
-opcaoB(X) :- writeln("Opcao invalida, tente outra!").
+opcaoA(0) :- halt.	
+opcaoA(1) :- buscarLivro().
+opcaoA(2) :- listarLivros().				
+opcaoA(3) :- listarLivrosDisponiveis().	
+opcaoA(4) :- listarLivrosAlugados().	
+opcaoA(5) :- efetuarAluguel().
+opcaoA(6) :- efetuarDevolucao().
+opcaoA(7) :- listarSugestaoLivros().
+opcaoA(8) :- visualizarCapacidade().
+opcaoA(9) :- visualizarPorcentagemAlugados().
+opcaoA(10) :- listarLivrosDoados().
+opcaoA(11) :- cadastrarLivro().
+opcaoA(X) :- writeln("Opcao invalida, tente outra!").
 
 menuOpcoesBibliotecario() :- 
 	writeln("\nAdicione sempre um ponto ao final de cada escolha."), 
@@ -78,7 +78,7 @@ menuOpcoesVisitante() :-
 	writeln("\n"),
 	read(A),
 	opcaoB(A),
-	menuOpcoesBibliotecario().
+	menuOpcoesVisitante().
 /*-------------------------------------------------------------------------------------Main-------------------------------------------------------------------*/
 main :-
 	writeln("Bem-vindo!"),
@@ -87,7 +87,7 @@ main :-
 cadastrarVisitante() :-
 	writeln("Digite seu nome e CPF [nome-cpf]: "),
 	read(C),
-    open('/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB - Haskell/Projeto-PLP-2020_3/Prolog/Dados/visitantes.txt',append,File),
+    open('Dados/visitantes.txt',append,File),
     formataVisitante(S,C),
     writeln(File,S),
     close(File).
@@ -102,7 +102,7 @@ formataVisitante(Out,L) :-
     format(string(Out),'~s',L).
 
 lerArquivo(Result) :-
-    open('/home/caiohrgm/Documentos/CompUFCG/RAE/PLP/Haskell/Projeto SGB - Haskell/Projeto-PLP-2020_3/Prolog/Dados/visitantes.txt',read,Str),
+    open('Dados/visitantes.txt',read,Str),
     read_stream_to_codes(Str,Visitantes),
     atom_string(Visitantes,Visitantes1),
     split_string(Visitantes1,"\n","",Result).
@@ -134,7 +134,15 @@ listarSugestaoLivros() :- halt.
 
 listarLivrosDoados() :- halt.
 
-enviarSugestaoLivro() :- halt.
+enviarSugestaoLivro() :- writeln("Escreva sua sugestão[seu nome-livro]:"),
+	read(C),
+    open('Dados/sugestoes.txt',append,File),
+    formataSugestao(S,C),
+    writeln(File,S),
+    close(File).
+
+formataSugestao(Out,L) :-
+    format(string(Out),'~s',L).	
 
 fazerDoacaoLivro() :- halt.
 
