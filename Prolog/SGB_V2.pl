@@ -12,7 +12,7 @@ opcaoP(3) :- cadastrarVisitante(),menuPrevio().
 opcaoP(_) :- writeln("Opção inválida. Tente novamente."),menuPrevio().
 
 menuPrevio() :-
-	writeln("\nBem-Vindo ao SGB.")
+	writeln("\nBem-Vindo ao SGB."),
 	writeln("\nAdicione sempre um ponto ao final de cada escolha."), 
 	writeln("0 - Sair"), 
 	writeln("1 - Sou Bibliotecário(a);"),
