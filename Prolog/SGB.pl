@@ -119,6 +119,8 @@ buscarLivro() :-
     read(C),
     lerArquivoLivros(Livros),
     encontraLivro(Livros,C).
+    
+buscarLivroGenero() :- halt.
 
 listarLivros() :- 
     lerArquivoLivros(L),
