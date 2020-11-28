@@ -127,14 +127,20 @@ listarLivros() :-
     writeln("Os livros da biblioteca são: "),
     writeln(L).
 
-listarLivrosAlugados() :- halt.
+listarLivrosAlugados() :- 
+	writeln("os livros que estão alugados são: "),
+	lerArquivoAlugados(Alugados),
+	writeln(Alugados).
 
 listarSugestaoLivros() :- 
 	writeln("os Livros sugeridos para aquisição são: "),
 	lerArquivoSugestoes(Sugestoes),
 	writeln(Sugestoes).
 
-listarLivrosDoados() :- halt.
+listarLivrosDoados() :- 
+	writeln("os livros que foram doados são: "),
+	lerArquivoDoados(Doados),
+	writeln(Doados).
 
 enviarSugestaoLivro() :- writeln("Escreva sua sugestão[Seu Nome - Nome do livro]:"),
 	read(C),
@@ -185,6 +191,18 @@ lerArquivoLivros(Result) :-
     read_stream_to_codes(Str,Livros),
     atom_string(Livros,Livros1),
     split_string(Livros1,"\n","",Result).
+    
+lerArquivoDoados(Result) :-
+    open('Dados/doacoes.txt',read,Str),
+    read_stream_to_codes(Str,Doados),
+    atom_string(Doados,Doados1),
+    split_string(Doados1,"\n","",Result).
+    
+lerArquivoAlugados(Result) :-
+    open('Dados/alugados.txt',read,Str),
+    read_stream_to_codes(Str,Alugados),
+    atom_string(Alugados,Alugados1),
+    split_string(Alugados1,"\n","",Result).
 
 encontraLivro([''],_).
 encontraLivro([X|T],Nome) :- 
@@ -200,6 +218,8 @@ lerArquivoSugestoes(Result) :-
     read_stream_to_codes(Str,Sugestoes),
     atom_string(Sugestoes,Sugestoes1),
     split_string(Sugestoes1,"\n","",Result).
+    
+
 
 
 
