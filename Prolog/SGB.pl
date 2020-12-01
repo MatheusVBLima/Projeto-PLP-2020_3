@@ -123,14 +123,20 @@ listarLivros() :-
     writeln("Os livros da biblioteca são: "),
     writeln(L).
 
-listarLivrosAlugados() :- halt.
+listarLivrosAlugados() :- 
+	writeln("os livros que estão alugados são: "),
+	lerArquivoAlugados(Alugados),
+	writeln(Alugados).
 
 listarSugestaoLivros() :- 
 	writeln("os Livros sugeridos para aquisição são: "),
 	lerArquivoSugestoes(Sugestoes),
 	writeln(Sugestoes).
 
-listarLivrosDoados() :- halt.
+listarLivrosDoados() :- 
+	writeln("os livros que foram doados são: "),
+	lerArquivoDoados(Doados),
+	writeln(Doados).
 
 enviarSugestaoLivro() :- writeln("Escreva sua sugestão[Seu Nome - Nome do livro]:"),
 	read(C),
@@ -198,11 +204,11 @@ targetVisitante([_|T],C) :-
     nth0(0,T,E),
     E == C.
 /*----------------Livros-------------*/
-lerArquivoAlugados(Result) :-  
+lerArquivoAlugados(Result) :-
     open('Dados/alugados.txt',read,Str),
-    read_stream_to_codes(Str,Livros),
-    atom_string(Livros,Livros1),
-    split_string(Livros1,"\n","",Result).
+    read_stream_to_codes(Str,Alugados),
+    atom_string(Alugados,Alugados1),
+    split_string(Alugados1,"\n","",Result).
 
 encontraAlugado([''],_,'').
 encontraAlugado([X|T],Nome,R) :- 
@@ -210,6 +216,12 @@ encontraAlugado([X|T],Nome,R) :-
     targetLivro(X1,Nome),
 	R = X;
 	encontraLivro(T,Nome,R).
+
+lerArquivoDoados(Result) :-
+    open('Dados/doacoes.txt',read,Str),
+    read_stream_to_codes(Str,Doados),
+    atom_string(Doados,Doados1),
+    split_string(Doados1,"\n","",Result).
 
 lerArquivoLivros(Result) :-  
     open('Dados/livros.txt',read,Str),
