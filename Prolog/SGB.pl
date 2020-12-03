@@ -37,7 +37,7 @@ opcaoB(_) :- writeln("Opcao invalida, tente outra!"), menuOpcoesBibliotecario().
 menuOpcoesBibliotecario() :- 
 	writeln("\nAdicione sempre um ponto ao final de cada escolha."), 
 	writeln("0 - Sair"),
-	writeln("1 - Bucar livro;"), 
+	writeln("1 - Buscar livro;"), 
 	writeln("2 - Listar todos os livros;"),
 	writeln("3 - Listar livros alugados;"),
 	writeln("4 - Efetuar Aluguel;"),
@@ -64,7 +64,7 @@ opcaoV(_) :- writeln("Opcao invalida, tente outra!").
 menuOpcoesVisitante() :- 
 	writeln("\nAdicione sempre um ponto ao final de cada escolha."), 
 	writeln("0 - Sair;"),
-	writeln("1 - Bucar livro;"), 
+	writeln("1 - Buscar livro;"), 
 	writeln("2 - Listar todos os livros;"),
 	writeln("3 - Listar livros alugados;"),
 	writeln("4 - Enviar sugestão de livro;"),
@@ -91,7 +91,7 @@ verificarVisitante() :-
 	writeln("Digite seu CPF: "),
 	read(C),
 	lerArquivoVisitantes(Visitantes),
-    encontrado(Visitantes,C).
+    encontraVisitante(Visitantes,C).
 /*--------------------------------------------------------------------Funções Bibliotecario(a)---------------------------------------------------------------*/
 verificarBibliotecario() :-
 	writeln("Digite seu CPF: "),
@@ -103,8 +103,8 @@ verificarBibliotecario() :-
 	menuPrevio.
 /*--------------------------------------------------------------------Funções Livros-------------------------------------------------------------------------*/
 cadastrarLivro() :- 
-    writeln("Digite o índice, nome, gênero, ano e autor do livro, tudo entre aspas, separado por '-' e com ponto no final do último dado: "),
-    writeln("Exemplo: ['1- nome livro-terror-... .'] "),
+    writeln("Digite o nome do livro, gênero, ano e autor do livro, tudo entre aspas, separado por '-' e com ponto no final do último dado: "),
+    writeln("Exemplo: ['nome livro-terror-... .'] "),
     read(C),
     open('Dados/livros.txt',append,File),
 	formataGeral(S,C),
@@ -143,9 +143,17 @@ enviarSugestaoLivro() :- writeln("Escreva sua sugestão[Seu Nome - Nome do livro
     open('Dados/sugestoes.txt',append,File),
     formataGeral(S,C),
     writeln(File,S),
-    close(File).
+    close(File),
+	writeln("Sugestão enviada com sucesso.").
 
-fazerDoacaoLivro() :- halt.
+fazerDoacaoLivro() :- 
+	writeln("Digite o nome, gênero, ano e autor do livro, tudo entre aspas, separado por '-' e com ponto no final do último dado: "),
+	read(C),
+	open('Dados/doacoes.txt',append,File),
+	formataGeral(S,C),
+	writeln(File,S),
+	writeln("Livro doado com sucesso"),
+	close(File).
 
 fazerResenhaLivro() :- 
 	writeln("Digite seu nome, o nome do livro e sua resenha[Seu nome - Nome do Livro - Resenha]: "),
@@ -156,22 +164,44 @@ fazerResenhaLivro() :-
 	writeln("Resenha cadastrada com sucesso."),
     close(File).
 
-listarResenhasLivros(): - halt.
+listarResenhasLivros():- 
+	writeln("Abaixo estão todas as resenhas dos livros: "),
+	lerArquivoResenhas(Resenhas),
+	writeln(Resenhas).
+
 /*-------------------------------------------------------------------Funções Acervo Biblioteca----------------------------------------------------------------*/
-efetuarAluguel() :- halt.
+efetuarAluguel() :- 
+	writeln("Digite o nome do visitante e o nome do livro a ser alugado, tudo entre aspas, separado por '-' e com ponto no final do último dado: "),
+    writeln("Exemplo: ['nome visitante - nome do livro'] "),
+    read(C),
+    open('Dados/alugados.txt',append,File),
+	formataGeral(S,C),
+    writeln(File,S),
+	writeln("Livro alugado com sucesso"),
+    close(File).
 
 efetuarDevolucao() :- 
 	writeln("Digite nome do livro a devolver:"),
 	read(L),
     I = 0,
 	lerArquivoAlugados(Alugados),
-	encontraLivro(Livros,L,R),
-	remove(R,Livros,NL),
+	encontraAlugado(Alugados,L,R),
+	remove(R,Alugados,NL),
 	reescreve(NL,I), writeln("Livro devolvido com sucesso."); writeln("Este livro não está alugado.").
 
-visualizarCapacidade() :- halt.
+visualizarCapacidade() :-
+	lerArquivoLivros(Livros),
+    length(Livros,R),
+    L is R-1,
+    write("A capacidade atual de livros é: "),write(L),writeln("/2000").
 
-visualizarPorcentagemAlugados() :- halt.
+visualizarPorcentagemAlugados() :-  
+	lerArquivoAlugados(Alugados),
+	length(Alugados,R1),
+	lerArquivoLivros(Livros),
+	length(Livros,R2),
+	P is (R1-1)/(R2-1),
+	write("A porcentagem de livros alugados é de:"),write(P),writeln("%").
 /*-------------------------------------------------------------------Funções Auxiliares------------------------------------------------------------------*/
 formataGeral(Out,L) :-
     format(string(Out),'~s',L).
@@ -213,9 +243,14 @@ lerArquivoAlugados(Result) :-
 encontraAlugado([''],_,'').
 encontraAlugado([X|T],Nome,R) :- 
     split_string(X,"-"," ",X1),
-    targetLivro(X1,Nome),
+    targetAlugado(X1,Nome),
 	R = X;
-	encontraLivro(T,Nome,R).
+	encontraAlugado(T,Nome,R).
+
+targetAlugado([_|T],C) :- 
+	writeln(T),
+	nth0(0,T,E),
+    E == C.
 
 lerArquivoDoados(Result) :-
     open('Dados/doacoes.txt',read,Str),
@@ -229,14 +264,19 @@ lerArquivoLivros(Result) :-
     atom_string(Livros,Livros1),
     split_string(Livros1,"\n","",Result).
 
+lerArquivoResenhas(Result) :-  
+    open('Dados/resenhas.txt',read,Str),
+    read_stream_to_codes(Str,Resenhas),
+    atom_string(Resenhas,Resenhas1),
+    split_string(Resenhas1,"","",Result).
+
 encontraLivro([''],_).
 encontraLivro([X|T],Nome) :- 
     split_string(X,"-"," ",X1),
     targetLivro(X1,Nome); encontraLivro(T,Nome).
 
-targetLivro([_|T],C) :- 
-    nth0(0,T,E),
-    E == C.
+targetLivro([H|_],C) :- 
+    H == C.
 
 lerArquivoSugestoes(Result) :-
     open('Dados/sugestoes.txt',read,Str),
