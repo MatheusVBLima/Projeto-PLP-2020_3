@@ -1,4 +1,4 @@
-# Projeto-PLP-2020_3
+# Projeto_PLP
                                            Sistema de Gerenciamento de Biblioteca- SGB
 
 O sistema proporciona um gerenciamento de um ambiente bibliotecário pequeno, como de uma escola ou biblioteca municipal.
